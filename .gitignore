@@ -1,0 +1,109 @@
+# Learn more:
+# https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
+# ==========================================
+# Dependencies
+# ==========================================
+
+node_modules/
+
+
+# ==========================================
+# Expo
+# ==========================================
+
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+
+# ==========================================
+# Native / Build files
+# ==========================================
+
+.kotlin/
+
+*.orig.*
+*.jks
+*.keystore
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.pem
+
+# Generated native folders
+/ios
+/android
+
+
+# ==========================================
+# Metro
+# ==========================================
+
+.metro-health-check*
+
+
+# ==========================================
+# Debug / Logs
+# ==========================================
+
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+*.log
+
+
+# ==========================================
+# Environment / Secrets
+# ==========================================
+
+.env
+.env.local
+.env.development
+.env.development.local
+.env.test
+.env.test.local
+.env.production
+.env.production.local
+
+# Firebase configuration
+google-services.json
+
+
+# ==========================================
+# AI / Editor Configuration
+# ==========================================
+
+.claude/
+
+
+# ==========================================
+# macOS
+# ==========================================
+
+.DS_Store
+
+
+# ==========================================
+# TypeScript
+# ==========================================
+
+*.tsbuildinfo
+
+
+# ==========================================
+# IDE / Editor
+# ==========================================
+
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+.idea/
+*.swp
+*.swo
+
+# Local Git backup
+.git-backup/

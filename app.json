@@ -1,0 +1,50 @@
+{
+  "expo": {
+    "name": "RanChat",
+    "slug": "ranchat",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#050505",
+
+    "ios": {
+      "supportsTablet": true
+    },
+
+    "android": {
+  "package": "com.nstechno.ranchat",
+  "googleServicesFile": "./google-services.json",
+  "backgroundColor": "#050505",
+  "adaptiveIcon": {
+    "backgroundColor": "#050505",
+    "foregroundImage": "./assets/icon.png"
+  },
+  "predictiveBackGestureEnabled": false
+},
+
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+
+    "plugins": [
+      "expo-font",
+      "@react-native-google-signin/google-signin",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/ranchat-logo.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#050505",
+          "imageWidth": 180
+        }
+      ]
+    ],
+
+    "extra": {
+      "eas": {
+        "projectId": "7004b956-3dd9-41bd-81b5-7c14817cc356"
+      }
+    }
+  }
+}
