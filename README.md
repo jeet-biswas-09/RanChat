@@ -42,7 +42,7 @@ I started RanChat without knowing everything I needed to know.
 
 A lot of what I know about development now, I learned while building this project.
 
-It took me 63 days to build RanChat. During that time I worked through frontend and backend problems, learned new technologies, fixed bugs and kept improving the project.
+It took me 93 days to build RanChat. During that time I worked through frontend and backend problems, learned new technologies, fixed bugs and kept improving the project.
 
 Some problems took several days to solve, but I continued working on them until I found a way forward.
 
