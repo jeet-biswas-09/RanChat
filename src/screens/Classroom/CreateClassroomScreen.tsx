@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   Image,
   KeyboardAvoidingView,
   Platform,
@@ -12,9 +13,16 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
+import Purchases from "react-native-purchases";
 import { LinearGradient } from "expo-linear-gradient";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { addDoc, collection } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import * as Clipboard from "expo-clipboard";
 import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
@@ -27,6 +35,9 @@ import { addMember } from "../../utils/classroomActions";
 import { styles } from "./styles";
 
 type Props = NativeStackScreenProps<RootStackParamList, "CreateClassroom">;
+
+const FREE_CLASSROOM_LIMIT = 3;
+const PREMIUM_ENTITLEMENT_ID = "premium";
 
 export default function CreateClassroomScreen({ navigation }: Props) {
   const [name, setName] = useState("");
@@ -89,11 +100,50 @@ export default function CreateClassroomScreen({ navigation }: Props) {
       setError("Please enter a classroom name.");
       return;
     }
+
     setError("");
     setLoading(true);
 
     try {
       const { userId, userName } = await getAnonymousIdentity();
+
+      // ---------- Premium check ----------
+      let isPremium = false;
+      try {
+  const customerInfo = await Purchases.getCustomerInfo();
+  isPremium =
+    typeof customerInfo.entitlements.active[PREMIUM_ENTITLEMENT_ID] !==
+    "undefined";
+} catch (e) {
+        // Can't verify the plan -> don't allow creation (avoids bypassing the limit)
+        setError(
+          "Couldn't verify your plan. Please check your connection and try again."
+        );
+        return; // finally{} below turns loading off
+      }
+
+      // ---------- Free-tier limit (only classrooms the user OWNS) ----------
+      if (!isPremium) {
+        const ownedSnapshot = await getDocs(
+          query(collection(db, "classrooms"), where("ownerId", "==", userId))
+        );
+
+        if (ownedSnapshot.size >= FREE_CLASSROOM_LIMIT) {
+          const limitMessage = `You've reached the ${FREE_CLASSROOM_LIMIT}-classroom limit. Upgrade to Premium for unlimited classrooms.`;
+          setError(limitMessage);
+          Alert.alert("Classroom limit reached", limitMessage, [
+            { text: "Not now", style: "cancel" },
+            {
+              text: "Upgrade",
+              // Change "Premium" if your route name is different
+              onPress: () => (navigation as any).navigate("Premium"),
+            },
+          ]);
+          return; // finally{} below turns loading off
+        }
+      }
+
+      // ---------- Existing creation logic (unchanged) ----------
       const code = generateClassroomCode();
       const now = Date.now();
 

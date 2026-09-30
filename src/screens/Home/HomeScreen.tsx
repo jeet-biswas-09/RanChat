@@ -21,6 +21,7 @@ import { RootStackParamList } from "../../navigation/RootNavigator";
 import { db } from "../../services/firebase";
 import { useTheme } from "../../theme/ThemeContext";
 import { useUnreadAlerts } from "../../hooks/useUnreadAlerts";
+import { usePremiumStatus } from "../../hooks/usePremiumStatus";
 import { getAnonymousIdentity } from "../../utils/anonymousIdentity";
 import { heroSlides, features, colorForClassroom } from "./data";
 import { styles } from "./styles";
@@ -130,6 +131,7 @@ type MyClassroom = {
 export default function HomeScreen({ navigation }: Props) {
   const { colors } = useTheme();
   const hasUnreadAlerts = useUnreadAlerts();
+  const { isPremium } = usePremiumStatus();
   const heroScrollX = useRef(new Animated.Value(0)).current;
   const heroListRef = useRef<Animated.FlatList<any>>(null);
   const [activeHero, setActiveHero] = useState(0);
@@ -201,13 +203,54 @@ export default function HomeScreen({ navigation }: Props) {
             <Text style={styles.logoAccent}>CHAT</Text>
           </View>
 
-          <TouchableOpacity
-            style={[styles.iconButton, { borderColor: colors.border }]}
-            activeOpacity={0.75}
-            onPress={goToPremium}
-          >
-            <Ionicons name="diamond-outline" size={20} color="#FBBF24" />
-          </TouchableOpacity>
+          {isPremium ? (
+            // Premium users: golden VIP badge (same 42x42 footprint as the shield,
+            // so the logo stays perfectly centered)
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={goToPremium}
+              style={{ width: 42, height: 42 }}
+            >
+              <LinearGradient
+                colors={["#FDE68A", "#FBBF24", "#D97706"]}
+                start={{ x: 0.1, y: 0 }}
+                end={{ x: 0.9, y: 1 }}
+                style={{
+                  width: 42,
+                  height: 42,
+                  borderRadius: 21,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  shadowColor: "#FBBF24",
+                  shadowOffset: { width: 0, height: 3 },
+                  shadowOpacity: 0.55,
+                  shadowRadius: 8,
+                  elevation: 6,
+                }}
+              >
+                <Ionicons name="diamond" size={12} color="#1C1917" />
+                <Text
+                  style={{
+                    color: "#1C1917",
+                    fontSize: 11,
+                    fontWeight: "900",
+                    letterSpacing: 0.8,
+                    marginTop: 1,
+                  }}
+                >
+                  VIP
+                </Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={[styles.iconButton, { borderColor: colors.border }]}
+              activeOpacity={0.75}
+              onPress={goToPremium}
+            >
+              <Ionicons name="diamond-outline" size={20} color="#FBBF24" />
+            </TouchableOpacity>
+          )}
         </View>
 
         {/* Greeting */}
